@@ -1,45 +1,80 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from "react";
+import {
+  TimePicker,
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  DatePicker,
+} from "@formily/antd";
+import { createForm } from "@formily/core";
+import { FormProvider, createSchemaField, FormConsumer } from "@formily/react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const SchemaField = createSchemaField({
+  components: {
+    TimePicker,
+    FormItem,
+    DatePicker,
+  },
+});
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
-}
+const form = createForm();
 
-export default App
+export default () => (
+  <FormProvider form={form}>
+    <SchemaField>
+      <SchemaField.String
+        name="input1"
+        title="time"
+        required
+        x-decorator="FormItem"
+        x-component="TimePicker"
+      />
+      <SchemaField.String
+        name="[input2,input3]"
+        title="time range"
+        x-decorator="FormItem"
+        x-component="TimePicker.RangePicker"
+      />
+      <SchemaField.String
+        name="input4"
+        required
+        title="normal date"
+        x-decorator="FormItem"
+        x-component="DatePicker"
+      />
+      <SchemaField.String
+        name="input5"
+        title="Week Selection"
+        x-decorator="FormItem"
+        x-component="DatePicker"
+        x-component-props={{
+          picker: "week",
+        }}
+      />
+      <SchemaField.String
+        name="[input6,input7]"
+        required
+        title="normal date"
+        x-decorator="FormItem"
+        x-component="DatePicker.RangePicker"
+      />
+      <SchemaField.String
+        name="[input7,input8]"
+        title="Week Selection"
+        x-decorator="FormItem"
+        x-component="DatePicker.RangePicker"
+        x-component-props={{
+          picker: "week",
+        }}
+      />
+    </SchemaField>
+    <FormButtonGroup>
+      <Submit onSubmit={console.log}>Submit</Submit>
+    </FormButtonGroup>
+    <FormConsumer>
+      {(form) => {
+        return <div>{JSON.stringify(form.values)}</div>;
+      }}
+    </FormConsumer>
+  </FormProvider>
+);
